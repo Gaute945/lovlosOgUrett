@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products</title>
+</head>
+<body>
+<h1>Products in <%= products[0].catagory %></h1>
+<ul>
+<% products.forEach((product) => { %>
+<li><%= product.name %> - $<%= product.price.toFixed(2) %></li>
+<% }) %>
+</ul>
+<a href="/">Back to Catagory Selection</a>
+</body>
+</html> 
