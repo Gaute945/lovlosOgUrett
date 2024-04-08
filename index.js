@@ -1,6 +1,6 @@
 import express from 'express';
-import { open } from 'sqlite'
-import sqlite3 from 'sqlite3'
+import { open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
 const dbPromise = open({
     filename: 'database.db',
@@ -25,10 +25,9 @@ app.get('/', (req, res) => {
 
 app.post('/products', async (req, res) => {
 
-    const { catagory } = req.body;
+    const { category } = req.body;
     const db = await dbPromise;
-    const query = 'SELECT * FROM products WHERE catagory = ?';
-    const products = await db.all(query, [catagory]);
+    const query = 'SELECT * FROM products WHERE category = ?';
+    const products = await db.all(query, [category]);
     res.render('products', { products });
-
 });

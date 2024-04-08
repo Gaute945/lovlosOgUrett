@@ -6,12 +6,12 @@
 <title>Products</title>
 </head>
 <body>
-<h1>Products in <%= products[0].catagory %></h1>
+<h1>Products in <%= products[0].category %></h1>
 <ul>
 <% products.forEach((product) => { %>
 <li><%= product.name %> - $<%= product.price.toFixed(2) %></li>
 <% }) %>
 </ul>
-<a href="/">Back to Catagory Selection</a>
+<a href="/">Back to Category Selection</a>
 </body>
 </html> 
