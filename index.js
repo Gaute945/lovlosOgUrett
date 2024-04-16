@@ -10,11 +10,21 @@ const dbPromise = open({
 const app = express();
 const port = 3000;
 
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: false }));
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
 
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+/* app.use(express.urlencoded({ extended: false })); */
+app.use(express.urlencoded({ extended: true }));
+
+
+//routes
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    console.log(`lokalhost:${port}`);
 });
 
 app.get('/', (req, res) => {
