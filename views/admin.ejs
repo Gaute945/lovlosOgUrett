@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="navlinks">
+    <a href="/home">Heim</a>
+    <a href="/logout">Logg ut</a>
+  </div>
+  <div class="admin">
+    <h2>Admin site</h2>
+    <h3>Users</h3>
+  </div>
+  <table class="table">
+    <!-- tbody og thead for å gruppere elementene i head body og footer. -->
+    <thead>
+      <tr>
+        <th>Fornavn</th>
+        <th>Etternavn</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>prfpic</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% users.forEach((user)=> { %>
+            <tr class="info">
+                <td><%= user.firstname %></td>
+                <td><%= user.lastname %></td>
+                <td><%= user.email %></td>
+                <!-- vist user.admin er 1 så viser det som admin vist ikkje user. -->
+                <td><%if(user.admin==1){%>
+                        admin
+                    <%} else{%>
+                        user<%}%>
+                </td>
+                <td><img src="<%= user.prfpic%>" alt="img" height="50vh"></td>
+            </tr>
+            <% }) %>
+    </tbody>
+    </table>
+    </body>
+</html>

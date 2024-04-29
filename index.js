@@ -38,7 +38,7 @@ exp.get('/', (req, res) => {
 exp.post("/register", async (req, res) => {
     const db = await dbPromise;
 
-    const { fname, lname, email, password, passwordRepeat } = req.body;
+    const { fname, lname, email, prf, password, passwordRepeat } = req.body;
 
     if (password != passwordRepeat) {
         res.render("register", { error: "Password must match." })
@@ -46,7 +46,7 @@ exp.post("/register", async (req, res) => {
     }
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await db.run("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)", fname, lname, email, passwordHash);
+    await db.run("INSERT INTO users (firstname, lastname, prfpic, email, password) VALUES (?, ?, ?, ?, ?)", fname, lname, prf, email, passwordHash);
     res.redirect("/");
 
 })
@@ -69,10 +69,15 @@ exp.post('/auth', async function (req, res) {
 
         if (isPasswordMatched) {
             res.status(200);
+            
+            if (checkInDb.admin == 1){
+                req.session.admin = true;
+            }
             // If the account exists
             // Authenticate the user
             req.session.loggedin = true;
             req.session.email = email;
+            req.session.userId = checkInDb.ID;
             // Redirect to home page
             res.redirect('/home');
         } else {
@@ -80,23 +85,41 @@ exp.post('/auth', async function (req, res) {
             res.send("Invalid password");
             res.redirect("/");
         }
-
     }
 
 });
-// http://localhost:3000/home
+
 exp.get('/home', function (req, res) {
     // If the user is loggedin
     if (req.session.loggedin) {
         // Output username
         const user = req.session.email;  
-        res.render('home', {user}); 
+        const admin = req.session.admin//admin sys
+        res.render('home', {user, admin}); //admin sys
     } else {
         // Not logged in
         res.send('Please login to view this page!');
     }
 });
-
+exp.get('/admin', async function(req,res){
+    if (req.session.loggedin){
+        const user = req.session.email;
+        const db = await dbPromise;
+        let getUserDetails = `SELECT * FROM users WHERE email = '${user}' AND admin = 1`;
+        let checkInDb = await db.get(getUserDetails);
+        const query = 'SELECT * FROM users';
+        const users = await db.all(query);
+        
+        if (checkInDb === undefined) {
+            res.status(400);
+            res.send("Invalid user");
+        } else {
+            let admin = true;
+            res.status(200);
+            res.render('admin', {user, admin, users});
+        }
+    }
+})
 exp.post('/products', async (req, res) => {
     const { category } = req.body;
     const db = await dbPromise;
@@ -112,6 +135,6 @@ exp.get("/logout", async (req, res) => {
    
     req.session.loggedin = false;
     req.session.username = '';
-
+    req.session.admin = false //admin sys
     res.redirect("/")
 })
