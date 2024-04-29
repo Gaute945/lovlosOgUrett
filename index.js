@@ -101,6 +101,15 @@ exp.get('/home', function (req, res) {
         res.send('Please login to view this page!');
     }
 });
+exp.get('/profile', async function(req,res){
+    if (req.session.loggedin) {
+        const user = req.session.email;  
+        const admin = req.session.admin//admin sys
+        res.render('profile', {user, admin}); //admin sys
+    } else {
+        res.send('Please login to view this page!');
+    }
+})
 exp.get('/admin', async function(req,res){
     if (req.session.loggedin){
         const user = req.session.email;
@@ -138,3 +147,9 @@ exp.get("/logout", async (req, res) => {
     req.session.admin = false //admin sys
     res.redirect("/")
 })
+/* 
+exp.post("/admin/ban", async (req, res) => {
+        
+            await db.run('DELETE FROM users WHERE ID = ?', userId);
+        }
+) */

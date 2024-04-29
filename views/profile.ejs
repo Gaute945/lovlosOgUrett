@@ -13,10 +13,11 @@
     <% if (admin){ %>
       <a href="/admin">admin side</a>
       <%}%>
+    <a href="/user"></a>
   </div>
-  <div class="admin">
-    <h2>Admin site</h2>
-    <h3>Users</h3>
+  <div class="user">
+    <h2>Profile page</h2>
+    <h3>User info</h3>
   </div>
   <table class="table">
     <!-- tbody og thead for å gruppere elementene i head body og footer. -->
@@ -30,7 +31,6 @@
       </tr>
     </thead>
     <tbody>
-        <% users.forEach((user)=> { %>
             <tr class="info">
                 <td><%= user.firstname %></td>
                 <td><%= user.lastname %></td>
@@ -43,7 +43,6 @@
                 </td>
                 <td><img src="<%= user.prfpic%>" alt="img" height="50vh"></td>
             </tr>
-            <% }) %>
     </tbody>
     </table>
     </body>
