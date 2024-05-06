@@ -31,8 +31,16 @@
         <% comments.slice().reverse().forEach(comment => { %>
           <div class="comments">
               <img id="prfpic" src="<%= comment.prfpic %>" alt="profile picture">
-              <p id="comment-author">posted by: <%= comment.email %></p>
+<!--               <p id="comment-author">posted by: <%= comment.email %></p> -->
+              <p id="comment-author">posted by: <%= comment.firstname %></p>
               <p id="comment-text"><%= comment.comment %></p>
+              <% if(admin){ %>
+                <form action="/home/delete" method="post">
+                  <input type="hidden" name="email" value="<%= comment.email %>">
+                  <input type="hidden" name="comment" value="<%= comment.comment %>">
+                  <button type="submit">Delete</button>
+                </form>
+              <% } %>
           </div>
       <% }); %>
     </div>

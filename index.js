@@ -97,13 +97,14 @@ exp.get('/home', async function (req, res) {
     // If the user is loggedin
     if (req.session.loggedin) {
         // Output username
+        const firstname = req.session.firstname
         const user = req.session.email;  
         const prfpic = req.session.prfpic;
         const admin = req.session.admin;
         const db = await dbPromise;
         try {
-            const comments = await db.all('SELECT post.comment, post.email, users.prfpic FROM post INNER JOIN users ON post.email = users.email');
-            res.render('home', { user, admin, comments, prfpic});
+            const comments = await db.all('SELECT post.comment, post.email, post.firstname, users.prfpic FROM post INNER JOIN users ON post.email = users.email');
+            res.render('home', { user, admin, comments, prfpic, firstname});
         } catch (error) {
             console.error('Error fetching comments:', error);
             res.status(500).send('Internal Server Error');
@@ -116,10 +117,12 @@ exp.get('/home', async function (req, res) {
 exp.post('/home/post', async (req, res) => {
     if (req.session.loggedin) {
         const email = req.session.email;
+        const firstname = req.session.firstname;
         const { comment } = req.body; //require or get the content of the message form body input field */
         const db = await dbPromise;
         try {
-            await db.run('INSERT INTO post (comment, email) VALUES (?, ?)', comment, email);
+            await db.run('INSERT INTO post (comment, email, firstname) VALUES (?, ?, ?)', comment, email, firstname);
+            console.log('user: '+ firstname +' commented: ' + comment)
             res.redirect('/home'); //if success redirect back to home
         } catch (error) {
             console.error('Post failed:');
@@ -129,6 +132,41 @@ exp.post('/home/post', async (req, res) => {
         res.redirect('/'); 
     }
 });
+//delete comments
+exp.post('/home/delete', async (req, res) => {
+    if (req.session.loggedin) {
+        const { email, comment } = req.body;
+        const db = await dbPromise;
+        try {
+            await db.run('DELETE FROM post WHERE email = ? AND comment = ?', email, comment);
+            console.log('Comment deleted');
+            res.redirect('/home');
+        } catch (error) {
+            console.error('Deletion failed:', error);
+            res.status(500).send('Error deleting comment');
+        }
+    } else {
+        res.redirect('/');
+    }
+});
+/* 
+exp.post('/home/delete', async (req, res) => {
+    if (req.session.loggedin) {
+        const { email, comment } = req.body;
+        const db = await dbPromise;
+        try {
+            await db.run('DELETE FROM post WHERE email = ? AND comment = ?', email, comment);
+            console.log('Comment deleted');
+            res.redirect('/home');
+        } catch (error) {
+            console.error('Deletion failed:', error);
+            res.status(500).send('Error deleting comment');
+        }
+    } else {
+        res.redirect('/');
+    }
+});
+ */
 //profile page
 exp.get('/profile', async function(req,res){
     if (req.session.loggedin) {
