@@ -78,6 +78,9 @@ exp.post('/auth', async function (req, res) {
             req.session.loggedin = true;
             req.session.email = email;
             req.session.userId = checkInDb.ID;
+            req.session.firstname = checkInDb.firstname; // Set firstname
+            req.session.lastname = checkInDb.lastname; // Set lastname
+            req.session.prfpic = checkInDb.prfpic; // Set prfpic
             // Redirect to home page
             res.redirect('/home');
         } else {
@@ -104,10 +107,13 @@ exp.get('/home', function (req, res) {
 exp.get('/profile', async function(req,res){
     if (req.session.loggedin) {
         const user = req.session.email;  
+        const fn = req.session.firstname;
+        const ln = req.session.lastname;
+        const pfpic = req.session.prfpic;
         const admin = req.session.admin//admin sys
-        res.render('profile', {user, admin}); //admin sys
+        res.render('profile', {fn, ln, user, pfpic, admin}); //admin sys
     } else {
-        res.send('Please login to view this page!');
+       res.send('Please login to view page silly');
     }
 })
 exp.get('/admin', async function(req,res){
