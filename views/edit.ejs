@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit User</title>
+</head>
+<body>
+  <h2>Edit User</h2>
+  <form action="/admin/update" method="POST">
+    <label for="email">email:</label>
+    <input type="text" name="email" value="<%= user.email %>">
+    <label for="firstname">firstname:</label>
+    <input type="text" id="firstname" name="firstname" value="<%= user.firstname %>"><br>
+    <label for="lastname">lastname:</label>
+    <input type="text" id="lastname" name="lastname" value="<%= user.lastname %>"><br>
+    <label for="prfpic">Profile Picture:</label>
+    <input type="text" id="prfpic" name="prfpic" value="<%= user.prfpic %>"><br>
+    <button type="submit">Update</button>
+  </form>
+</body>
+</html>

@@ -7,25 +7,35 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <nav>
     <div class="navlinks">
-      <a href="/home">Heim</a>
-      <a href="/logout">Logg ut</a>
-      <% if (admin){ %>
-      <a href="/admin">admin side</a>
-      <%}%>
-      <a href="/profile">profile:<%= user %></a>
+      <ul>
+        <li>
+        <a href="/home">Heim</a></li>
+        <li>
+        <a href="/logout">Logg ut</a></li>
+        <li>
+        <% if (admin){ %>
+        <a href="/admin">admin side</a></li>
+        <%}%>
+        <li>
+        <a href="/profile">profile:<%= user %></a></li>
+    </ul>
+      </div>
+      <div class="main">
+        <form action="/home/post" method="post">
+            <label for="comment">Comment:</label>
+            <input type="text" id="comment" name="comment">
+            <button type="submit">Post</button>
+        </form>
+    
+        <% comments.slice().reverse().forEach(comment => { %>
+          <div class="comments">
+              <p>Posted by: <%= comment.email %></p>
+              <p><%= comment.comment %></p>
+          </div>
+      <% }); %>
     </div>
-  </nav>
-  <h1>Select a Product Category</h1>
-  <form action="/products" method="post">
-    <label for="category">Category:</label>
-    <select name="category" id="category">
-      <option value="Electronics">Electronics</option>
-      <option value="Clothing">Clothing</option>
-      <option value="Books">Books</option>
-    </select>
-    <button type="submit">Submit</button>
-  </form>
+    
+</div>
 </body>
 </html>

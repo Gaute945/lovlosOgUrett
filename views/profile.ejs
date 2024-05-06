@@ -8,13 +8,21 @@
 </head>
 <body>
   <div class="navlinks">
-    <a href="/home">Heim</a>
-    <a href="/logout">Logg ut</a>
-    <% if (admin){ %>
-      <a href="/admin">admin side</a>
+    <ul>
+      <li>
+      <a href="/home">Heim</a></li>
+      <li>
+      <a href="/logout">Logg ut</a></li>
+      <li>
+      <% if (admin){ %>
+      <a href="/admin">admin side</a></li>
       <%}%>
-    <a href="/user"></a>
-  </div>
+      <li>
+      <a href="/profile">profile:<%= user %></a></li>
+    
+  </ul>
+    </div>
+  <div class="main">
   <div class="user">
     <h2>Profile page</h2>
     <h3>User info</h3>
@@ -25,8 +33,7 @@
         <th>Fornavn</th>
         <th>Etternavn</th>
         <th>Email</th>
-        <th>Role</th>
-        <th>prfpic</th>
+        <th>profile pic</th>
       </tr>
     </thead>
     <tbody>
@@ -34,10 +41,10 @@
               <td><%= fn %></td>
               <td><%= ln %></td>
               <td><%= user %></td>
-              <td><%if(user.admin == 1) { %> admin <% } else { %> user <% } %></td>
               <td><img src="<%= pfpic %>" alt="img" height="50vh"></td>
           </form>
     </tbody>
     </table>
+  </div>
     </body>
 </html>

@@ -50,7 +50,7 @@ exp.post("/register", async (req, res) => {
     res.redirect("/");
 
 })
-//
+//authentication page if login info is correct login and save some info about table
 exp.post('/auth', async function (req, res) {
 
     const db = await dbPromise;
@@ -81,6 +81,7 @@ exp.post('/auth', async function (req, res) {
             req.session.firstname = checkInDb.firstname; // Set firstname
             req.session.lastname = checkInDb.lastname; // Set lastname
             req.session.prfpic = checkInDb.prfpic; // Set prfpic
+            req.session.comment = checkInDb.comment
             // Redirect to home page
             res.redirect('/home');
         } else {
@@ -91,19 +92,26 @@ exp.post('/auth', async function (req, res) {
     }
 
 });
-
-exp.get('/home', function (req, res) {
+//
+exp.get('/home', async function (req, res) {
     // If the user is loggedin
     if (req.session.loggedin) {
         // Output username
         const user = req.session.email;  
-        const admin = req.session.admin//admin sys
-        res.render('home', {user, admin}); //admin sys
+        const admin = req.session.admin
+        const db = await dbPromise;
+        try {
+            const comments = await db.all('SELECT * FROM post');
+            res.render('home', { user, admin, comments });
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+            res.status(500).send('Internal Server Error');
+        }
     } else {
-        // Not logged in
         res.send('Please login to view this page!');
     }
 });
+//profile page
 exp.get('/profile', async function(req,res){
     if (req.session.loggedin) {
         const user = req.session.email;  
@@ -116,6 +124,7 @@ exp.get('/profile', async function(req,res){
        res.send('Please login to view page silly');
     }
 })
+//for admin page see all users
 exp.get('/admin', async function(req,res){
     if (req.session.loggedin){
         const user = req.session.email;
@@ -135,6 +144,7 @@ exp.get('/admin', async function(req,res){
         }
     }
 })
+//delete users
 exp.post('/admin/delete', async (req, res) => {
     const { email } = req.body;
     const db = await dbPromise;
@@ -148,22 +158,60 @@ exp.post('/admin/delete', async (req, res) => {
         res.status(500).send('Error deleting user');
     }
 });
-
-exp.post('/products', async (req, res) => {
-    const { category } = req.body;
-    const db = await dbPromise;
-
-    const query = 'SELECT * FROM products WHERE category = ?';
-    const products = await db.all(query, [category]);
-
-    res.render('products', { products });
-
+//chage to edit page
+exp.get('/admin/edit', async (req, res) => {
+    if (req.session.loggedin) {
+        const email = req.query.email;
+        const db = await dbPromise;
+        const query = 'SELECT * FROM users WHERE email = ?';
+        const user = await db.get(query, [email]);
+        
+        if (user) {
+            res.render('edit', { user });
+        } else {
+            res.status(404).send('User not found');
+        }
+    } else {
+        res.redirect('/');
+    }
 });
-
+//change and update info
+exp.post('/admin/update', async (req, res) => {
+    const { email, firstname, lastname, prfpic } = req.body;
+    const db = await dbPromise;
+    
+    try {
+        await db.run('UPDATE users SET firstname = ?, lastname = ?, prfpic = ? WHERE email = ?', [firstname, lastname, prfpic, email]);
+        console.log('user data updated firstname: ' + firstname + ' lastname: ' + lastname + ' email: ' +email)
+        res.redirect('/admin');
+    } catch (error) {
+        console.error('Update failed:');
+        res.status(500).send('Error updating user');
+    }
+});
+// logout redirect to login page
 exp.get("/logout", async (req, res) => {
    
     req.session.loggedin = false;
     req.session.username = '';
     req.session.admin = false //admin sys
     res.redirect("/")
-})
+});
+
+
+exp.post('/home/post', async (req, res) => {
+    if (req.session.loggedin) {
+        const email = req.session.email;
+        const { comment } = req.body; //require or get the content of the message form body input field */
+        const db = await dbPromise;
+        try {
+            await db.run('INSERT INTO post (comment, email) VALUES (?, ?)', comment, email);
+            res.redirect('/home'); //if success redirect back to home
+        } catch (error) {
+            console.error('Post failed:');
+            res.status(500).send('Error posting:');
+        }
+    } else {
+        res.redirect('/'); 
+    }
+});

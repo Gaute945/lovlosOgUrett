@@ -8,12 +8,21 @@
 </head>
 <body>
   <div class="navlinks">
-    <a href="/home">Heim</a>
-    <a href="/logout">Logg ut</a>
+  <ul>
+    <li>
+    <a href="/home">Heim</a></li>
+    <li>
+    <a href="/logout">Logg ut</a></li>
+    <li>
     <% if (admin){ %>
-      <a href="/admin">admin side</a>
-      <%}%>
+    <a href="/admin">admin side</a></li>
+    <%}%>
+    <li>
+    <a href="/profile">profile:<%= user %></a></li>
+  
+</ul>
   </div>
+  <div class="main">
   <div class="admin">
     <h2>Admin site</h2>
     <h3>Users</h3>
@@ -27,6 +36,8 @@
         <th>Email</th>
         <th>Role</th>
         <th>prfpic</th>
+        <th>edit</th>
+        <th>delete</th>
       </tr>
     </thead>
     <tbody>
@@ -38,14 +49,21 @@
               <td><%if(user.admin == 1) { %> admin <% } else { %> user <% } %></td>
               <td><img src="<%= user.prfpic %>" alt="img" height="50vh"></td>
               <td>
-                  <form action="/admin/delete" method="POST">
-                      <input type="hidden" name="email" value="<%= user.email %>">
-                      <button class="delete-button" type="submit">Delete</button>
+                  <form action="/admin/edit" method="GET" style="display: inline;">
+                    <input type="hidden" name="email" value="<%= user.email %>">
+                    <button class="edit" type="submit">Edit</button>
                   </form>
+              </td>
+              <td>
+                <form action="/admin/delete" method="POST">
+                  <input type="hidden" name="email" value="<%= user.email %>">
+                  <button class="delete-button" type="submit">Delete</button>
+              </form>
               </td>
             <% }) %>
           </form>
     </tbody>
     </table>
+  </div>
     </body>
 </html>
