@@ -45,3 +45,17 @@
   padding: 0.7vh 1vh;
   text-decoration: none;
 }
+.delete-button {
+  border: none; /* No border */
+  padding: 10px 20px; /* Padding */
+  text-align: center; /* Center text */
+  text-decoration: none; /* No underline */
+  display: inline-block; /* Display as inline block */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Cursor pointer */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.delete-button:hover {
+  background-color: #cc0000; /* Darker red on hover */
+}

@@ -129,6 +129,20 @@ exp.get('/admin', async function(req,res){
         }
     }
 })
+exp.post('/admin/delete', async (req, res) => {
+    const { email } = req.body;
+    const db = await dbPromise;
+
+    try {
+        await db.run('DELETE FROM users WHERE email = ?', email);
+        res.redirect('/admin');
+        console.log('user' + email + 'deleted')
+    } catch (error) {
+        console.error('Deletion failed: '+ email);
+        res.status(500).send('Error deleting user');
+    }
+});
+
 exp.post('/products', async (req, res) => {
     const { category } = req.body;
     const db = await dbPromise;
@@ -147,9 +161,3 @@ exp.get("/logout", async (req, res) => {
     req.session.admin = false //admin sys
     res.redirect("/")
 })
-/* 
-exp.post("/admin/ban", async (req, res) => {
-        
-            await db.run('DELETE FROM users WHERE ID = ?', userId);
-        }
-) */

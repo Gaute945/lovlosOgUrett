@@ -32,18 +32,19 @@
     <tbody>
         <% users.forEach((user)=> { %>
             <tr class="info">
-                <td><%= user.firstname %></td>
-                <td><%= user.lastname %></td>
-                <td><%= user.email %></td>
-                <!-- vist user.admin er 1 så viser det som admin vist ikkje user. -->
-                <td><%if(user.admin==1){%>
-                        admin
-                    <%} else{%>
-                        user<%}%>
-                </td>
-                <td><img src="<%= user.prfpic%>" alt="img" height="50vh"></td>
-            </tr>
+              <td><%= user.firstname %></td>
+              <td><%= user.lastname %></td>
+              <td><%= user.email %></td>
+              <td><%if(user.admin == 1) { %> admin <% } else { %> user <% } %></td>
+              <td><img src="<%= user.prfpic %>" alt="img" height="50vh"></td>
+              <td>
+                  <form action="/admin/delete" method="POST">
+                      <input type="hidden" name="email" value="<%= user.email %>">
+                      <button class="delete-button" type="submit">Delete</button>
+                  </form>
+              </td>
             <% }) %>
+          </form>
     </tbody>
     </table>
     </body>

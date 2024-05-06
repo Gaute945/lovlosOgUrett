@@ -34,9 +34,9 @@
             <tr class="info">
                 <td><%= user.firstname %></td>
                 <td><%= user.lastname %></td>
-                <td><%= user.email %></td>
+                <td><%= user.email%></td>
                 <!-- vist user.admin er 1 så viser det som admin vist ikkje user. -->
-                <td><%if(user.admin==1){%>
+                <td><%if(admin==1){%>
                         admin
                     <%} else{%>
                         user<%}%>
