@@ -30,8 +30,9 @@
     
         <% comments.slice().reverse().forEach(comment => { %>
           <div class="comments">
-              <p>Posted by: <%= comment.email %></p>
-              <p><%= comment.comment %></p>
+              <img id="prfpic" src="<%= comment.prfpic %>" alt="profile picture">
+              <p id="comment-author">posted by: <%= comment.email %></p>
+              <p id="comment-text"><%= comment.comment %></p>
           </div>
       <% }); %>
     </div>

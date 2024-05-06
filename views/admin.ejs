@@ -47,7 +47,7 @@
               <td><%= user.lastname %></td>
               <td><%= user.email %></td>
               <td><%if(user.admin == 1) { %> admin <% } else { %> user <% } %></td>
-              <td><img src="<%= user.prfpic %>" alt="img" height="50vh"></td>
+              <td><img id="prfpic" src="<%= user.prfpic %>" alt="img" height="50vh"></td>
               <td>
                   <form action="/admin/edit" method="GET" style="display: inline;">
                     <input type="hidden" name="email" value="<%= user.email %>">

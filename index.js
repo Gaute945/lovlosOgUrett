@@ -98,17 +98,35 @@ exp.get('/home', async function (req, res) {
     if (req.session.loggedin) {
         // Output username
         const user = req.session.email;  
-        const admin = req.session.admin
+        const prfpic = req.session.prfpic;
+        const admin = req.session.admin;
         const db = await dbPromise;
         try {
-            const comments = await db.all('SELECT * FROM post');
-            res.render('home', { user, admin, comments });
+            const comments = await db.all('SELECT post.comment, post.email, users.prfpic FROM post INNER JOIN users ON post.email = users.email');
+            res.render('home', { user, admin, comments, prfpic});
         } catch (error) {
             console.error('Error fetching comments:', error);
             res.status(500).send('Internal Server Error');
         }
     } else {
         res.send('Please login to view this page!');
+    }
+});
+
+exp.post('/home/post', async (req, res) => {
+    if (req.session.loggedin) {
+        const email = req.session.email;
+        const { comment } = req.body; //require or get the content of the message form body input field */
+        const db = await dbPromise;
+        try {
+            await db.run('INSERT INTO post (comment, email) VALUES (?, ?)', comment, email);
+            res.redirect('/home'); //if success redirect back to home
+        } catch (error) {
+            console.error('Post failed:');
+            res.status(500).send('Error posting:');
+        }
+    } else {
+        res.redirect('/'); 
     }
 });
 //profile page
@@ -196,22 +214,4 @@ exp.get("/logout", async (req, res) => {
     req.session.username = '';
     req.session.admin = false //admin sys
     res.redirect("/")
-});
-
-
-exp.post('/home/post', async (req, res) => {
-    if (req.session.loggedin) {
-        const email = req.session.email;
-        const { comment } = req.body; //require or get the content of the message form body input field */
-        const db = await dbPromise;
-        try {
-            await db.run('INSERT INTO post (comment, email) VALUES (?, ?)', comment, email);
-            res.redirect('/home'); //if success redirect back to home
-        } catch (error) {
-            console.error('Post failed:');
-            res.status(500).send('Error posting:');
-        }
-    } else {
-        res.redirect('/'); 
-    }
 });

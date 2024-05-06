@@ -20,7 +20,7 @@ body{
   .table th {
     background-color: #f2f2f2;
   }
-  .table img {
+  #prfpic {
     border-radius: 20vh;
     height:7vh;
     width: 7vh;
@@ -98,16 +98,15 @@ body{
 
 
 .comments {
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  padding: 10px;
+  border: 0.1vh solid #ccc;
+  margin-bottom: 1vh;
+  padding: 1vh;
 }
 
-.comment-text {
-  font-size: 16px;
+#comment-text {
+  font-size: 2vh;
 }
 
-.comment-author {
-  font-style: italic;
+#comment-author {
   color: #888;
 }
